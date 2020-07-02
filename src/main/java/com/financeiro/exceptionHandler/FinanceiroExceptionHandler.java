@@ -27,11 +27,10 @@ public class FinanceiroExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, new Error(userMessage, developerMessage), headers, HttpStatus.BAD_REQUEST, request);
     }
 
-
     public static class Error {
         
-        public String userMessage;
-        public String developerMessage;
+        private String userMessage;
+        private String developerMessage;
 
         public Error(String userMessage, String developerMessage) {
             this.userMessage = userMessage;
