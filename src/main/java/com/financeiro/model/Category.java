@@ -8,37 +8,37 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class Categoria {    
+public class Category {    
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
 
-    public String nome;
+    public String name;
     
-    public Categoria() {}
+    public Category() {}
 
-    public Categoria(Long id, String nome) {
+    public Category(Long id, String name) {
         this.id = id;
-        this.nome = nome;
+        this.name = name;
     }
 
     public Long getId() { return this.id; }
     public void setId(Long id) { this.id = id; }
 
-    public String getNome() { return this.nome; }
-    public void setNome(String nome) { this.nome = nome; }
+    public String getName() { return this.name; }
+    public void setName(String name) { this.name = name; }
 
 
     @Override
     public boolean equals(Object o) {
         if (o == this)
             return true;
-        if (!(o instanceof Categoria)) {
+        if (!(o instanceof Category)) {
             return false;
         }
-        Categoria categoria = (Categoria) o;
-        return Objects.equals(id, categoria.id);
+        Category Category = (Category) o;
+        return Objects.equals(id, Category.id);
     }
 
     @Override
