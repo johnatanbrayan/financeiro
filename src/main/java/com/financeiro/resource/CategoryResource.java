@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 import com.financeiro.model.Category;
 import com.financeiro.repository.CategoryRepository;
@@ -30,7 +31,7 @@ public class CategoryResource {
 
     // Create one Category
     @PostMapping()
-    public ResponseEntity<Category> createCategory(@RequestBody Category newCategory, HttpServletResponse response) {
+    public ResponseEntity<Category> createCategory(@Valid @RequestBody Category newCategory, HttpServletResponse response) {
         Category category = categoryRepository.save(newCategory);
 
         // Get the url location on api created
