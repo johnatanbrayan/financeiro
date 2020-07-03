@@ -10,21 +10,23 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
-public class Category {    
+public class Person {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
-    @Size(min = 3, max = 30)
+    @Size(min= 3, max= 20)
     private String name;
-    
-    public Category() {}
+    private Boolean status;
 
-    public Category(Long id, String name) {
+    public Person() {}
+
+    public Person(Long id, String name, Boolean status) {
         this.id = id;
         this.name = name;
+        this.status = status;
     }
 
     public Long getId() { return this.id; }
@@ -33,21 +35,22 @@ public class Category {
     public String getName() { return this.name; }
     public void setName(String name) { this.name = name; }
 
+    public Boolean getActive() { return this.status; }
+    public void setActvie(Boolean status) { this.status = status; }
 
     @Override
     public boolean equals(Object o) {
         if (o == this)
             return true;
-        if (!(o instanceof Category)) {
+        if (!(o instanceof Person)) {
             return false;
         }
-        Category Category = (Category) o;
-        return Objects.equals(id, Category.id);
+        Person person = (Person) o;
+        return Objects.equals(id, person.id);
     }
 
     @Override
     public int hashCode() {
         return Objects.hashCode(id);
     }
-  
 }
