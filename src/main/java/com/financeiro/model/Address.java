@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class Address {
     
@@ -27,9 +29,14 @@ public class Address {
     @JoinColumn(name = "city_id")
     private City city;
 
+    @JsonIgnore
+    @ManyToOne()
+    @JoinColumn(name = "person_id")
+    private Person person;
+
     public Address() {}
 
-    public Address(Long id, String streetAddress, String number, String complement, String province, String zipCode, String latitude, String longitude, City city) {
+    public Address(Long id, String streetAddress, String number, String complement, String province, String zipCode, String latitude, String longitude, City city, Person person) {
         this.id = id;
         this.streetAddress = streetAddress;
         this.number = number;
@@ -39,6 +46,7 @@ public class Address {
         this.latitude = latitude;
         this.longitude = longitude;
         this.city = city;
+        this.person = person;
     }
 
     public Long getId() { return this.id; }
@@ -60,13 +68,16 @@ public class Address {
     public void setZipCode(String zipCode) { this.zipCode = zipCode; }
 
     public String getLatitude() { return this.latitude; }
-    public void setLatitude() { this.latitude = latitude; }
+    public void setLatitude(String latitude) { this.latitude = latitude; }
 
     public String getLongitude() { return this.longitude; }
     public void setLongitude(String longitude) { this.longitude = longitude; }
 
     public City getCity() { return this.city; }
     public void setCity(City city) { this.city = city; }
+
+    public Person getPerson() { return this.person; }
+    public void setPerson(Person person) { this.person = person; }
 
     @Override
     public boolean equals(Object o) {

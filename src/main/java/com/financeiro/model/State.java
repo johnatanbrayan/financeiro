@@ -10,6 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class State {
 
@@ -19,8 +21,9 @@ public class State {
     private String name;
     private String uf;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "state")
-    private List<City> cities = new ArrayList();
+    private List<City> cities = new ArrayList<>();
 
     public State() {}
 
