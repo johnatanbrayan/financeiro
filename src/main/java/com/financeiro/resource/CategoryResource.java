@@ -46,7 +46,7 @@ public class CategoryResource {
     @GetMapping()
     public ResponseEntity<List<Category>> findAllCategory() {
         List<Category> category = categoryRepository.findAll();
-        return ResponseEntity.ok(category);
+        return !category.isEmpty() ? ResponseEntity.ok(category) : ResponseEntity.notFound().build();
     }
 
     // Return one Category
@@ -65,7 +65,8 @@ public class CategoryResource {
 
     // Delete a Category
     @DeleteMapping("/{id}")
-    public void deleteCategory(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
         categoryRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }

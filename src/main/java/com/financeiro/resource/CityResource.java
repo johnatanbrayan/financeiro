@@ -40,7 +40,7 @@ public class CityResource {
     @GetMapping()
     public ResponseEntity<List<City>> findAllCity() {
         List<City> cities = cityRepository.findAll();
-        return ResponseEntity.ok(cities);
+        return !cities.isEmpty() ? ResponseEntity.ok(cities) : ResponseEntity.notFound().build();
     }
 
     @GetMapping("/{id}")
