@@ -53,7 +53,7 @@ public class CityResource {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<City> updateCity(@Valid @RequestBody City city, Long id) {
+    public ResponseEntity<City> updateCity(@Valid @RequestBody City city, @PathVariable Long id) {
         cityRepository.findById(id).orElseThrow(() -> new EmptyResultDataAccessException(1));
 
         city.setId(id);

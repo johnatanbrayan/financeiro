@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -24,7 +25,7 @@ public class Person {
     private String name;
     private Boolean status;
 
-    @OneToMany(mappedBy = "person")
+    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
     private List<Address> adresses = new ArrayList<>();
 
     public Person() {}
@@ -41,8 +42,8 @@ public class Person {
     public String getName() { return this.name; }
     public void setName(String name) { this.name = name; }
 
-    public Boolean getActive() { return this.status; }
-    public void setActvie(Boolean status) { this.status = status; }
+    public Boolean getStatus() { return this.status; }
+    public void setStatus(Boolean status) { this.status = status; }
 
     public List<Address> getAdresses() { return this.adresses; }
     public void setAdresses(List<Address> adresses) { this.adresses = adresses; }

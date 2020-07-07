@@ -52,7 +52,7 @@ public class Address {
     public Long getId() { return this.id; }
     public void setId(Long id) { this.id = id; }
 
-    public String getStreeAddress() { return this.streetAddress; }
+    public String getStreetAddress() { return this.streetAddress; }
     public void setStreetAddress(String streetAddress) { this.streetAddress = streetAddress; }
 
     public String getNumber() { return this.number; }

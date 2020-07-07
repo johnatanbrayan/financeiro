@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import com.financeiro.model.Person;
+import com.financeiro.repository.AddressRepository;
 import com.financeiro.repository.PersonRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +31,14 @@ public class PersonResource {
     @Autowired
     private PersonRepository personRepository;
 
+    @Autowired
+    private AddressRepository addressRepository;
+
     @PostMapping()
     public ResponseEntity<Person> createPerson(@Valid @RequestBody Person newPerson, HttpServletResponse response) {
         Person person = personRepository.save(newPerson);
+        addressRepository.saveAll(person.getAdresses());
+
         URI uri = ServletUriComponentsBuilder.fromCurrentContextPath().path("/{id}").buildAndExpand(person.getId()).toUri();
         response.setHeader("Location", uri.toASCIIString());
         return ResponseEntity.created(uri).body(person);    

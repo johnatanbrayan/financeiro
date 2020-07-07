@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -32,7 +31,7 @@ public class StateResource {
     private StateRepository stateRepository;
 
     @PostMapping()
-    public ResponseEntity<State> createState(@Valid  @RequestParam State newState, HttpServletResponse response) {
+    public ResponseEntity<State> createState(@Valid  @RequestBody State newState, HttpServletResponse response) {
         State state = stateRepository.save(newState);
 
         URI uri = ServletUriComponentsBuilder.fromCurrentContextPath().path("/{id}").buildAndExpand(state.getId()).toUri();
@@ -54,7 +53,7 @@ public class StateResource {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<State> updateState(@Valid @RequestBody State state, Long id) {
+    public ResponseEntity<State> updateState(@Valid @RequestBody State state, @PathVariable Long id) {
         stateRepository.findById(id).orElseThrow(() -> new EmptyResultDataAccessException(1));
 
         state.setId(id);
@@ -67,6 +66,4 @@ public class StateResource {
         stateRepository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
-
-    
 }

@@ -32,7 +32,7 @@ public class AddressResource {
 
     // Create one Address
     @PostMapping()
-    public ResponseEntity<Address> createAddress(@RequestBody Address newAddress, HttpServletResponse response) {
+    public ResponseEntity<Address> createAddress(@Valid @RequestBody Address newAddress, HttpServletResponse response) {
         Address address = addressRepository.save(newAddress);
 
         URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand(address.getId()).toUri();
