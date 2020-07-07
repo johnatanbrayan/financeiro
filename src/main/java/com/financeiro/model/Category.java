@@ -33,7 +33,6 @@ public class Category {
     public String getName() { return this.name; }
     public void setName(String name) { this.name = name; }
 
-
     @Override
     public boolean equals(Object o) {
         if (o == this)
@@ -49,5 +48,4 @@ public class Category {
     public int hashCode() {
         return Objects.hashCode(id);
     }
-  
 }

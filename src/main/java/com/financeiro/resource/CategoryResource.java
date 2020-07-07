@@ -11,6 +11,7 @@ import com.financeiro.model.Category;
 import com.financeiro.repository.CategoryRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -53,14 +54,19 @@ public class CategoryResource {
     @GetMapping("/{id}")
     public ResponseEntity<Optional<Category>> findCategory(@PathVariable Long id) {
         Optional<Category> category = categoryRepository.findById(id);
-        return category.isPresent() ? ResponseEntity.ok(category) : ResponseEntity.notFound().build();
+        return ResponseEntity.ok(category);
     }
 
     // Update a Category 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateCategory(@RequestBody Category newCategory) {
-        categoryRepository.save(newCategory);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Category> updateCategory(@Valid @RequestBody Category updateCategory, @PathVariable Long id) {
+        categoryRepository.findById(id).orElseThrow(() -> new EmptyResultDataAccessException(1));
+
+        updateCategory.setId(id);
+
+        categoryRepository.save(updateCategory);
+
+        return ResponseEntity.ok(updateCategory);
     }
 
     // Delete a Category

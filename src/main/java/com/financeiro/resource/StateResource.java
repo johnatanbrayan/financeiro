@@ -5,16 +5,20 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 import com.financeiro.model.State;
 import com.financeiro.repository.StateRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,7 +32,7 @@ public class StateResource {
     private StateRepository stateRepository;
 
     @PostMapping()
-    public ResponseEntity<State> createState(@RequestParam State newState, HttpServletResponse response) {
+    public ResponseEntity<State> createState(@Valid  @RequestParam State newState, HttpServletResponse response) {
         State state = stateRepository.save(newState);
 
         URI uri = ServletUriComponentsBuilder.fromCurrentContextPath().path("/{id}").buildAndExpand(state.getId()).toUri();
@@ -47,6 +51,15 @@ public class StateResource {
     public ResponseEntity<Optional<State>> findOneState(@PathVariable Long id) {
         Optional<State> state = stateRepository.findById(id);
         return state.isPresent() ? ResponseEntity.ok(state) : ResponseEntity.notFound().build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<State> updateState(@Valid @RequestBody State state, Long id) {
+        stateRepository.findById(id).orElseThrow(() -> new EmptyResultDataAccessException(1));
+
+        state.setId(id);
+        stateRepository.save(state);
+        return ResponseEntity.ok(state);
     }
 
     @DeleteMapping("/{id}")
