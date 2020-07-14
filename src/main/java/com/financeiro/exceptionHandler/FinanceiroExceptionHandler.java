@@ -4,9 +4,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.financeiro.service.exception.InvalidPersonException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -48,6 +51,26 @@ public class FinanceiroExceptionHandler extends ResponseEntityExceptionHandler {
         List<Error> erros = Arrays.asList(new Error(userMessage, developerMessage));
 
         return handleExceptionInternal(ex, erros, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+    }
+    typeCategory
+    public ResponseEntity<Object> handleInvalidPersonException(InvalidPersonException ex, WebRequest request) {
+
+        String userMessage = messageSource.getMessage("invalid_person.message", null, LocaleContextHolder.getLocale());
+        String developerMessage = ex.toString();
+        List<Error> erros = Arrays.asList(new Error(userMessage, developerMessage));
+
+        return handleExceptionInternal(ex, erros, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+    }
+
+    // Exception Handling for invalid operation for constraints
+    @ExceptionHandler({ DataIntegrityViolationException.class })
+    public ResponseEntity<Object> handleDataIntegrityViolationException(DataIntegrityViolationException ex, WebRequest request) {
+
+        String userMessage = messageSource.getMessage("invalid_operation.message", null, LocaleContextHolder.getLocale());
+        String developerMessage = ex.getRootCause().toString();
+        List<Error> erros = Arrays.asList(new Error(userMessage, developerMessage));
+
+        return handleExceptionInternal(ex, erros, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
     
     // Exception Handling for bean valition
