@@ -52,7 +52,7 @@ public class FinanceiroExceptionHandler extends ResponseEntityExceptionHandler {
 
         return handleExceptionInternal(ex, erros, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
-    typeCategory
+    
     public ResponseEntity<Object> handleInvalidPersonException(InvalidPersonException ex, WebRequest request) {
 
         String userMessage = messageSource.getMessage("invalid_person.message", null, LocaleContextHolder.getLocale());

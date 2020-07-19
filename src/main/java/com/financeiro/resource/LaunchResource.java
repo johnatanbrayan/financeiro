@@ -14,8 +14,9 @@ import com.financeiro.repository.PersonRepository;
 import com.financeiro.service.exception.InvalidPersonException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
 
 @RestController
 @RequestMapping("/launches")
@@ -52,15 +54,13 @@ public class LaunchResource {
         URI uri = ServletUriComponentsBuilder.fromCurrentContextPath().path("/{id}").buildAndExpand(launch.getId()).toUri();
 
         response.setHeader("Location", uri.toASCIIString());
-
         return ResponseEntity.created(uri).body(launch);
     }
 
     @GetMapping()
-    public ResponseEntity<List<Launch>> findAllLaunch() {
-        List<Launch> launches = launchRepository.findAll();
-
-        return !launches.isEmpty() ? ResponseEntity.ok(launches) : ResponseEntity.notFound().build();
+    public ResponseEntity<List<Launch>> findAllPageLaunch(Pageable pageable) {
+        Page<Launch> page = launchRepository.findAll(pageable);
+        return !page.isEmpty() ? ResponseEntity.ok().body(page.getContent()) : ResponseEntity.notFound().build();
     }
 
     @GetMapping("/{id}")
