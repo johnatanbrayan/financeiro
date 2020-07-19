@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -57,10 +58,35 @@ public class LaunchResource {
         return ResponseEntity.created(uri).body(launch);
     }
 
+    // Test to execute search in the same endpoint
+
+    // @GetMapping()
+    // public ResponseEntity<List<Launch>> findAllPageLaunch(Pageable pageable, String description) {
+    //     Page<Launch> searchDescription = launchRepository.findLaunchBySearch(description,pageable);
+    //     Page<Launch> page = launchRepository.findAll(pageable);
+
+    //     Page<Launch> finalPage;
+
+    //     if (description == null) {
+    //         finalPage = page;
+    //     } else {
+    //         finalPage = searchDescription;
+    //     }
+        
+    //     return !finalPage.isEmpty() ? ResponseEntity.ok().body(page.getContent()) : ResponseEntity.notFound().build();
+    // }
+
     @GetMapping()
     public ResponseEntity<List<Launch>> findAllPageLaunch(Pageable pageable) {
         Page<Launch> page = launchRepository.findAll(pageable);
+
         return !page.isEmpty() ? ResponseEntity.ok().body(page.getContent()) : ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<List<Launch>> findLaunchBySearch(@RequestParam String description, Pageable pageable) {
+        Page<Launch> page = launchRepository.findLaunchBySearch(description, pageable);
+        return ResponseEntity.ok().body(page.getContent());
     }
 
     @GetMapping("/{id}")
