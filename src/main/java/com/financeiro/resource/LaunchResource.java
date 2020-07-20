@@ -1,6 +1,7 @@
 package com.financeiro.resource;
 
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,11 +13,15 @@ import com.financeiro.model.Person;
 import com.financeiro.repository.LaunchRepository;
 import com.financeiro.repository.PersonRepository;
 import com.financeiro.service.exception.InvalidPersonException;
+import com.financeiro.service.exception.query.LaunchSpecification;
 
+import static org.springframework.data.jpa.domain.Specification.where;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -84,8 +89,17 @@ public class LaunchResource {
     }
 
     @GetMapping("/filter")
-    public ResponseEntity<List<Launch>> findLaunchBySearch(@RequestParam String description, Pageable pageable) {
-        Page<Launch> page = launchRepository.findLaunchBySearch(description, pageable);
+    public ResponseEntity<List<Launch>> findLaunchBySearch(@RequestParam(required = false) String description, @RequestParam(required = false) @DateTimeFormat(iso = ISO.DATE) LocalDate dueDateFrom, Pageable pageable) {
+        Page<Launch> page = launchRepository.findAll(pageable);
+
+        if(description != null && dueDateFrom != null) {
+            page = launchRepository.findAll(where(LaunchSpecification.description(description)).and(LaunchSpecification.dueDateFrom(dueDateFrom)), pageable);
+        }else if(description != null) {
+            page = launchRepository.findAll(where(LaunchSpecification.description(description)), pageable);
+        } else if(dueDateFrom != null) {
+            page = launchRepository.findAll(where(LaunchSpecification.dueDateFrom(dueDateFrom)), pageable);
+        }
+
         return ResponseEntity.ok().body(page.getContent());
     }
 
