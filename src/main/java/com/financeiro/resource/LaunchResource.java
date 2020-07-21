@@ -34,7 +34,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-
 @RestController
 @RequestMapping("/launches")
 public class LaunchResource {
@@ -63,44 +62,28 @@ public class LaunchResource {
         return ResponseEntity.created(uri).body(launch);
     }
 
-    // Test to execute search in the same endpoint
-
-    // @GetMapping()
-    // public ResponseEntity<List<Launch>> findAllPageLaunch(Pageable pageable, String description) {
-    //     Page<Launch> searchDescription = launchRepository.findLaunchBySearch(description,pageable);
-    //     Page<Launch> page = launchRepository.findAll(pageable);
-
-    //     Page<Launch> finalPage;
-
-    //     if (description == null) {
-    //         finalPage = page;
-    //     } else {
-    //         finalPage = searchDescription;
-    //     }
-        
-    //     return !finalPage.isEmpty() ? ResponseEntity.ok().body(page.getContent()) : ResponseEntity.notFound().build();
-    // }
-
     @GetMapping()
-    public ResponseEntity<List<Launch>> findAllPageLaunch(Pageable pageable) {
+    public ResponseEntity<List<Launch>> findAllLaunch(@RequestParam(required = false) String description, @RequestParam(required = false) @DateTimeFormat(iso = ISO.DATE) LocalDate dueDateFrom, @RequestParam(required = false) @DateTimeFormat(iso = ISO.DATE) LocalDate dueDateUntil, Pageable pageable) {
+        
         Page<Launch> page = launchRepository.findAll(pageable);
 
-        return !page.isEmpty() ? ResponseEntity.ok().body(page.getContent()) : ResponseEntity.notFound().build();
-    }
-
-    @GetMapping("/filter")
-    public ResponseEntity<List<Launch>> findLaunchBySearch(@RequestParam(required = false) String description, @RequestParam(required = false) @DateTimeFormat(iso = ISO.DATE) LocalDate dueDateFrom, Pageable pageable) {
-        Page<Launch> page = launchRepository.findAll(pageable);
-
-        if(description != null && dueDateFrom != null) {
-            page = launchRepository.findAll(where(LaunchSpecification.description(description)).and(LaunchSpecification.dueDateFrom(dueDateFrom)), pageable);
-        }else if(description != null) {
-            page = launchRepository.findAll(where(LaunchSpecification.description(description)), pageable);
+        if(description != null && dueDateFrom != null && dueDateUntil != null) {
+            page = launchRepository.findAll(where(LaunchSpecification.searchByDescription(description)).and(LaunchSpecification.searchByDueDateFrom(dueDateFrom)).and(LaunchSpecification.searchByDueDateUntil(dueDateUntil)), pageable);
+        } else if(description != null && dueDateFrom != null) {
+            page = launchRepository.findAll(where(LaunchSpecification.searchByDescription(description)).and(LaunchSpecification.searchByDueDateFrom(dueDateFrom)), pageable);
+        } else if(description != null && dueDateUntil != null) {
+            page = launchRepository.findAll(where(LaunchSpecification.searchByDescription(description)).and(LaunchSpecification.searchByDueDateUntil(dueDateUntil)), pageable);
+        } else if(dueDateFrom != null && dueDateUntil != null) {
+            page = launchRepository.findAll(where(LaunchSpecification.searchByDueDateFrom(dueDateFrom)).and(LaunchSpecification.searchByDueDateUntil(dueDateUntil)), pageable);
+        } else if(description != null) {
+            page = launchRepository.findAll(where(LaunchSpecification.searchByDescription(description)), pageable);
         } else if(dueDateFrom != null) {
-            page = launchRepository.findAll(where(LaunchSpecification.dueDateFrom(dueDateFrom)), pageable);
+            page = launchRepository.findAll(where(LaunchSpecification.searchByDueDateFrom(dueDateFrom)), pageable);
+        } else if(dueDateUntil != null) {
+            page = launchRepository.findAll(where(LaunchSpecification.searchByDueDateUntil(dueDateUntil)), pageable);
         }
 
-        return ResponseEntity.ok().body(page.getContent());
+        return !page.isEmpty() ? ResponseEntity.ok().body(page.getContent()) : ResponseEntity.notFound().build();
     }
 
     @GetMapping("/{id}")
