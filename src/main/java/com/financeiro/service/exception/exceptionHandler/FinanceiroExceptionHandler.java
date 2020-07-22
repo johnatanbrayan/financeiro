@@ -1,4 +1,4 @@
-package com.financeiro.exceptionHandler;
+package com.financeiro.service.exception.exceptionHandler;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -1,4 +1,4 @@
-package com.financeiro.service.exception.query;
+package com.financeiro.service.query;
 
 import java.time.LocalDate;
 

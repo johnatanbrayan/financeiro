@@ -13,7 +13,7 @@ import com.financeiro.model.Person;
 import com.financeiro.repository.LaunchRepository;
 import com.financeiro.repository.PersonRepository;
 import com.financeiro.service.exception.InvalidPersonException;
-import com.financeiro.service.exception.query.LaunchSpecification;
+import com.financeiro.service.query.LaunchSpecification;
 
 import static org.springframework.data.jpa.domain.Specification.where;
 import org.springframework.beans.factory.annotation.Autowired;
